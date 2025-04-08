@@ -1,8 +1,8 @@
-#[derive(Drop)]    
+#[derive(Drop)]
 enum TaskStatus {
-Pending,
-IN_PROGRESS,
-COMPLETED,
+    Pending,
+    IN_PROGRESS,
+    COMPLETED,
 }
 #[derive(Drop)]
 enum Direction {
@@ -13,15 +13,14 @@ enum Direction {
 }
 #[derive(Drop)]
 enum Grade<u64> {
-   Good: u64,
-   Fail: u64,
-   None, 
+    Good: u64,
+    Fail: u64,
+    None,
 }
 // enum Option<T> {
 //     Some: T,
 //     None,
 // }
-  
 
 fn get_user(id: u32) -> Option<felt252> {
     if id == 5 {
