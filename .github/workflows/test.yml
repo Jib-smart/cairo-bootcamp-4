@@ -17,4 +17,4 @@ jobs:
           scarb-lock: ../../Scarb.lock
 
       - name: Run tests
-        run: snforge test
+        run: scarb build && scarb test
