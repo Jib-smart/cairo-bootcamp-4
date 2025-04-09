@@ -2,12 +2,12 @@ fn main() {
     // Function calls (Uncomment to execute them)
     // say_name("Sylvia Nnoruka!");
     // intro_to_felt();
-    
+
     let num_1 = 5;
     let num_2 = 10;
     let sum = sum_num(num_1, num_2);
     println!("The sum of {} and {} is = {}", num_1, num_2, sum);
-    
+
     // check_u16(6553); // Uncomment if needed
     is_greater_than_50(3);
 }
@@ -49,4 +49,66 @@ fn is_greater_than_50(x: u32) -> bool {
     }
     println!("false");
     return false;
+}
+
+fn reverse_byte_array(word: ByteArray) -> ByteArray {
+    word.rev()
+}
+
+fn caesar_cipher(word: ByteArray, cipher: u8) -> ByteArray {
+    let mut ciphered: ByteArray = "";
+
+    for byte in 0..word.len() {
+        let current_char: u8 = word[byte];
+        let ciphed_char = if current_char >= 65 && current_char <= 90 {
+            (current_char - 65 + cipher) % 26 + 65
+        } else if current_char >= 97 && current_char <= 122 {
+            (current_char - 97 + cipher) % 26 + 97
+        } else {
+            current_char
+        };
+        ciphered.append_byte(ciphed_char);
+    }
+
+    ciphered
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{caesar_cipher, is_greater_than_50, reverse_byte_array};
+
+    #[test]
+    #[ignore]
+    fn test_is_greater_than_50() {
+        let values: Array<u32> = array![76, 54, 49, 51, 52];
+        for value in values {
+            assert!(
+                is_greater_than_50(value), "Value: {} is expected to be greater than 50", value,
+            );
+        }
+    }
+
+    #[test]
+    fn test_is_greater_than_50_should_fail() {
+        let value: u32 = 3;
+        let expected: bool = false;
+        let got: bool = is_greater_than_50(value);
+        assert(got == expected, '3 is not greater than 50');
+    }
+
+    #[test]
+    fn test_reverse_byte_array() {
+        let expected: ByteArray = "lawal";
+        let got: ByteArray = reverse_byte_array(expected.clone());
+        assert(got == expected, 'lawal is a palindrome');
+    }
+
+    #[test]
+    fn test_caesar_cipher() {
+        let word: ByteArray = "abcdefghijklmnopqrstuvwxyz";
+        let cipher: u8 = 26;
+        let expected: ByteArray = "abcdefghijklmnopqrstuvwxyz";
+        let got: ByteArray = caesar_cipher(word, cipher);
+        assert(got == expected, 'Ciphered word should be "Pmpxp"');
+    }
 }
