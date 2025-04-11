@@ -1,19 +1,18 @@
-use cohort_4::{ISimpleBankDispatcher, ISimpleBankDispatcherTrait};
+mod test_account_creation;
+mod test_deposit;
+use cohort_4::SimpleBank::{AccountCreated, DepositMade, Event};
+use cohort_4::interface::{ISimpleBankDispatcher, ISimpleBankDispatcherTrait};
+use core::num::traits::Bounded;
+use openzeppelin_token::erc20::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
 use snforge_std::{
-    ContractClassTrait, DeclareResultTrait, declare, start_cheat_caller_address,
-    stop_cheat_caller_address,
+    ContractClassTrait, DeclareResultTrait, EventSpyAssertionsTrait, declare, spy_events,
+    start_cheat_caller_address, stop_cheat_caller_address,
 };
-use starknet::ContractAddress;
+use starknet::{ContractAddress, contract_address_const};
 
 fn setup() -> ContractAddress {
     let contract_class = declare("SimpleBank").unwrap().contract_class();
-    //let mut constructor_calldata: Array<felt252> = ArrayTrait::new();
-    //let owner: ContractAddress = 'Darren'.try_into().unwrap();
-    //let value: u128 = 1000;
-
-    //owner.serialize(ref constructor_calldata);
-    //value.serialize(ref constructor_calldata);
-    let (contract_address, _) = contract_class.deploy(@ArrayTrait::new()).unwrap();
+    let (contract_address, _) = contract_class.deploy(@array![]).unwrap();
     contract_address
 }
 
@@ -50,7 +49,11 @@ fn test_simple_bank() {
 
     start_cheat_caller_address(contract_address, address);
     contract_instance.transfer(120, other_address);
-    assert!(contract_instance.get_balance() == 730, "Transfer Failed");
+    assert!(
+        contract_instance.get_balance() == 730,
+        "Transfer Failed: {}",
+        contract_instance.get_balance(),
+    );
     stop_cheat_caller_address(contract_address);
 
     start_cheat_caller_address(contract_address, other_address);

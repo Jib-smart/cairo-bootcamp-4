@@ -7,15 +7,20 @@ edition = "2024_07"
 # [executable]
 [dependencies]
 starknet = "2.11.2"
+openzeppelin_token = "1.0.0"
 
 [cairo]
 enable-gas = true
 
 [dev-dependencies]
-cairo_test = "2.11.2"
-# cairo_execute = "2.11.3"
 assert_macros = "2.11.2"
 snforge_std = "0.40.0"
 
 [scripts]
 test = "snforge test"
+
+[[tool.snforge.fork]]
+name = "MAINNET"
+# url = "https://api.cartridge.gg/x/starknet/mainnet"
+url = "https://starknet-mainnet.public.blastapi.io/rpc/v0_8"
+block_id.tag = "latest"
