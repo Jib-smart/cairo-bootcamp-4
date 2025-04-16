@@ -1,7 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Circle, X } from "lucide-react";
 import Navbar from "../components/Navbar";
+import {
+  useConnect,
+  useContract,
+  useReadContract,
+  useSendTransaction,
+} from "@starknet-react/core";
+import { TODO_ABI } from "@/constants/abi";
+import { TODO_CONTRACT_ADDRESS } from "@/constants";
+import { shortString } from "starknet";
 
 type Todo = {
   id: string;
@@ -10,24 +19,62 @@ type Todo = {
 };
 
 export default function TodoList() {
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: "1", text: "Join Starknet Discord", status: "pending" },
-    { id: "2", text: "Write your first Cairo contract", status: "pending" },
-    { id: "3", text: "Deploy a dApp on Starknet", status: "completed" },
-  ]);
+  const [todos, setTodos] = useState<Todo[]>();
   const [input, setInput] = useState("");
 
+  const { sendAsync } = useSendTransaction({ calls: [] });
+  const { contract } = useContract({
+    abi: TODO_ABI,
+    address: TODO_CONTRACT_ADDRESS,
+  });
+
+  const { data, isFetching, error } = useReadContract({
+    abi: TODO_ABI,
+    address: TODO_CONTRACT_ADDRESS,
+    functionName: "get_todo_list",
+    args: [],
+  });
+
   const addTodo = async () => {
-    // add todo
+    if (!input) return;
+    if (input.length > 31) alert("Text can not be more than 31 characters");
+
+    const calls = contract?.populate("add_todo", [input]);
+    if (calls) {
+      await sendAsync([calls]);
+      alert("Todo added succesfully");
+    }
   };
 
-  const deleteTodo = async (index: number) => {
+  const deleteTodo = async (id: number) => {
+    const calls = contract?.populate("delete_todo", [id]);
+    if (calls) {
+      await sendAsync([calls]);
+      alert("Todo deleted successfully");
+    }
+
     // delete todo
   };
 
-  const toggleStatus = async (index: number) => {
-    // toggle status
+  const toggleStatus = async (id: number) => {
+    const calls = contract?.populate("complete_todo", [id]);
+    if (calls) {
+      await sendAsync([calls]);
+      alert("Todo status changed successfully");
+    }
   };
+
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      const result = data.map((todo) => ({
+        id: shortString.decodeShortString(todo.id.toString()),
+        text: shortString.decodeShortString(todo.todo_description.toString()),
+        status: shortString.decodeShortString(todo.status.toString()),
+      }));
+
+      setTodos(result);
+    }
+  }, [data]);
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-white ">
@@ -57,46 +104,50 @@ export default function TodoList() {
             </button>
           </div>
 
-          <ul className="space-y-5">
-            {todos &&
-              todos.map(({ status, text }, index) => (
-                <li
-                  key={index}
-                  className="flex items-center justify-between px-6 py-4 rounded-2xl bg-[#161b22] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#5C94FF]"
-                >
-                  <div
-                    className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 cursor-pointer ${
-                      status == "completed"
-                        ? "text-gray-500 line-through"
-                        : "text-white font-medium"
-                    }`}
-                    onClick={() => toggleStatus(index)}
+          {isFetching ? (
+            <p className="text-center">Loading...</p>
+          ) : (
+            <ul className="space-y-5">
+              {todos &&
+                todos.map(({ status, text, id }, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between px-6 py-4 rounded-2xl bg-[#161b22] hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#5C94FF]"
                   >
-                    <div className="flex items-center gap-3">
-                      <Circle className="text-[#5C94FF] w-5 h-5 shrink-0" />
-                      <span className="text-sm md:text-base">{text}</span>
+                    <div
+                      className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 cursor-pointer ${
+                        status == "completed"
+                          ? "text-gray-500 line-through"
+                          : "text-white font-medium"
+                      }`}
+                      onClick={() => toggleStatus(Number(id))}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Circle className="text-[#5C94FF] w-5 h-5 shrink-0" />
+                        <span className="text-sm md:text-base">{text}</span>
+                      </div>
+
+                      <span
+                        className={`text-xs py-1 px-3 rounded-full font-semibold ${
+                          status == "completed"
+                            ? "bg-green-700 text-green-300"
+                            : "bg-yellow-700 text-yellow-300"
+                        }`}
+                      >
+                        {status}
+                      </span>
                     </div>
 
-                    <span
-                      className={`text-xs py-1 px-3 rounded-full font-semibold ${
-                        status == "completed"
-                          ? "bg-green-700 text-green-300"
-                          : "bg-yellow-700 text-yellow-300"
-                      }`}
+                    <button
+                      onClick={() => deleteTodo(index)}
+                      className="text-gray-400 hover:text-red-500 transition"
                     >
-                      {status}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={() => deleteTodo(index)}
-                    className="text-gray-400 hover:text-red-500 transition"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </li>
-              ))}
-          </ul>
+                      <X className="w-5 h-5" />
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>

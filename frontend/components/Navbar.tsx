@@ -2,10 +2,21 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { X, UserCircle2 } from "lucide-react";
-import {  useState } from "react";
+import { useState } from "react";
+import { useConnect, useAccount, Connector, useDisconnect } from "@starknet-react/core";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { connectors, connect, connectAsync } = useConnect();
+
+  const { account, address, isConnected } = useAccount();
+
+
+  const handleConnect = async (connector: Connector) => {
+    await connectAsync({ connector });
+    setIsOpen(false);
+  };
 
   return (
     <nav className="w-full border border-[#1c1f26] px-6 py-4">
@@ -16,14 +27,16 @@ export default function Navbar() {
           </span>
         </h1>
 
-        {/* <ProfileBar address={account.address} /> */}
-
-        <button
-          onClick={() => setIsOpen(true)}
-          className="px-4 md:px-4 py-3 text-base md:text-lg font-bold bg-gradient-to-r from-[#FC8181] to-[#5C94FF] rounded-full hover:opacity-90 transition-all duration-200"
-        >
-          Connect Wallet
-        </button>
+        {isConnected && account ? (
+          <ProfileBar address={account.address} />
+        ) : (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="px-4 md:px-4 py-3 text-base md:text-lg font-bold bg-gradient-to-r from-[#FC8181] to-[#5C94FF] rounded-full hover:opacity-90 transition-all duration-200"
+          >
+            Connect Wallet
+          </button>
+        )}
       </div>
 
       <Dialog.Root open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -46,13 +59,14 @@ export default function Navbar() {
             </p>
 
             <div className="space-y-3">
-              <button className="w-full py-2 rounded-md bg-[#5C94FF] text-white font-semibold hover:bg-[#487dd8] transition">
-                Argent X
-              </button>
-
-              <button className="w-full py-2 rounded-md bg-[#5C94FF] text-white font-semibold hover:bg-[#487dd8] transition">
-                Braavos
-              </button>
+              {connectors.map((connector) => (
+                <button
+                  onClick={() => handleConnect(connector)}
+                  className="w-full py-2 rounded-md bg-[#5C94FF] text-white font-semibold hover:bg-[#487dd8] transition"
+                >
+                  {connector.name}
+                </button>
+              ))}
             </div>
           </Dialog.Content>
         </Dialog.Portal>
@@ -62,12 +76,13 @@ export default function Navbar() {
 }
 
 function ProfileBar({ address }: { address: string }) {
+  const {disconnect} = useDisconnect()
 
   return (
     <div className="flex items-center space-x-2 px-4 py-2 rounded-full border border-[#2d2f36] bg-[#1c1f26]">
       <UserCircle2 className="w-6 h-6 text-white" />
-     
-      <button >disconnect</button>
+
+      <button onClick={() => disconnect()}>disconnect</button>
     </div>
   );
 }
