@@ -102,8 +102,4 @@ Built with ❤️ by [@zintarh](https://github.com/zintarh)
 
 ---
 
-Let me know if you want to add:
 
-- Live demo URL
-- Starknet Testnet contract address
-- Screenshots or walkthrough GIFs
