@@ -4,7 +4,7 @@ pub mod interface;
 
 #[derive(Clone, Debug, Drop, PartialEq, Serde, starknet::Store)]
 pub struct BankAccount {
-    pub name: ByteArray,
+    pub name: felt252,
     pub address: ContractAddress,
     pub balance: u64,
     pub opened: bool,
@@ -38,7 +38,7 @@ pub mod SimpleBank {
 
     #[abi(embed_v0)]
     impl ISimpleBankImpl of ISimpleBank<ContractState> {
-        fn open_account(ref self: ContractState, name: ByteArray) {
+        fn open_account(ref self: ContractState, name: felt252) {
             let address = get_caller_address();
             let bank_account: BankAccount = BankAccount {
                 address, name: name.clone(), balance: 0, opened: true,
@@ -118,7 +118,7 @@ pub mod SimpleBank {
 
             let address_zero: ContractAddress = '0'.try_into().unwrap();
             let closed_account: BankAccount = BankAccount {
-                address: address_zero, name: "", balance: 0, opened: false,
+                address: address_zero, name: '', balance: 0, opened: false,
             };
 
             self.bank_accounts.write(address, closed_account);

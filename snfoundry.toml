@@ -9,4 +9,7 @@ account = "c6"                                     # Account from `accounts_file
 # keystore = "~/keystore"                                  # Path to the keystore file
 # wait-params = { timeout = 300, retry-interval = 10 }     # Wait for submitted transaction parameters
 block-explorer = "StarkScan"                             # Block explorer service used to display links to transaction details
+
+[sncast.default]
+account = "tester-hero"
 # show-explorer-links = true                               # Print links pointing to pages with transaction details in the chosen block explorer

@@ -24,3 +24,5 @@ name = "MAINNET"
 # url = "https://api.cartridge.gg/x/starknet/mainnet"
 url = "https://starknet-mainnet.public.blastapi.io/rpc/v0_8"
 block_id.tag = "latest"
+
+[[target.starknet-contract]]

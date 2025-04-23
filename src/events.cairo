@@ -2,7 +2,7 @@ use starknet::ContractAddress;
 
 #[derive(Clone, Drop, Debug, starknet::Event)]
     pub struct AccountCreated {
-        pub name: ByteArray,
+        pub name: felt252,
         pub address: ContractAddress,
         pub balance: u64,
     }
