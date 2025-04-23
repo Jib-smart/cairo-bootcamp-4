@@ -6,7 +6,7 @@ pub mod interface;
 pub struct BankAccount {
     pub name: ByteArray,
     pub address: ContractAddress,
-    pub balance: u128,
+    pub balance: u64,
     pub opened: bool,
 }
 
@@ -47,13 +47,13 @@ pub mod SimpleBank {
             self.emit(Event::AccountCreated(AccountCreated { name, address, balance: 0 }));
         }
 
-        fn deposit(ref self: ContractState, amount: u128) {
+        fn deposit(ref self: ContractState, amount: u64) {
             let address = get_caller_address();
 
             let mut bank_account: BankAccount = self.bank_accounts.read(address);
             assert(bank_account.opened, 'Nonexistent Account');
 
-            let balance: u128 = bank_account.balance;
+            let balance: u64 = bank_account.balance;
 
             let (new_balance, is_overflow) = balance.overflowing_add(amount);
             assert(!is_overflow, 'Balance Overflow');
@@ -63,13 +63,13 @@ pub mod SimpleBank {
             self.emit(Event::DepositMade(DepositMade { amount, address }))
         }
 
-        fn withdraw(ref self: ContractState, amount: u128) {
+        fn withdraw(ref self: ContractState, amount: u64) {
             let address = get_caller_address();
 
             let mut bank_account: BankAccount = self.bank_accounts.read(address);
             assert(bank_account.opened, 'Nonexistent Account');
 
-            let balance: u128 = bank_account.balance;
+            let balance: u64 = bank_account.balance;
 
             let (new_balance, is_underflow) = balance.overflowing_sub(amount);
             assert(!is_underflow, 'Balance Underflow');
@@ -80,7 +80,7 @@ pub mod SimpleBank {
             self.emit(Event::WithdrawalMade(WithdrawalMade { amount, address }))
         }
 
-        fn transfer(ref self: ContractState, amount: u128, recipient: ContractAddress) {
+        fn transfer(ref self: ContractState, amount: u64, recipient: ContractAddress) {
             let from = get_caller_address();
 
             let mut bank_account_from: BankAccount = self.bank_accounts.read(from);
@@ -89,8 +89,8 @@ pub mod SimpleBank {
             assert(bank_account_from.opened, 'Nonexistent Account');
             assert(bank_account_to.opened, 'Nonexistent Account');
 
-            let balance_from: u128 = bank_account_from.balance;
-            let balance_to: u128 = bank_account_to.balance;
+            let balance_from: u64 = bank_account_from.balance;
+            let balance_to: u64 = bank_account_to.balance;
 
             let (balance_from_new_amount, is_underflow) = balance_from.overflowing_sub(amount);
             assert(!is_underflow, 'Insufficient Funds');
@@ -132,7 +132,7 @@ pub mod SimpleBank {
                 )
         }
 
-        fn get_balance(self: @ContractState) -> u128 {
+        fn get_balance(self: @ContractState) -> u64 {
             self.get_account_details().balance
         }
 
