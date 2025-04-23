@@ -1,0 +1,284 @@
+{
+  "generator": "starknet-events-beta",
+  "state": {
+    "name": "simple_bank",
+    "chainName": "starknet-testnet",
+    "contracts": [
+      {
+        "name": "simplebank",
+        "address": "0x05b2c60fe73ef869045ec173b20496c4f7d5f6c0c6ca52405e578b7cc144f6f6",
+        "initialBlock": 715839,
+        "aliases": [],
+        "rawAbi": [
+          {
+            "type": "impl",
+            "name": "ISimpleBankImpl",
+            "interface_name": "simplebank::interface::ISimpleBank"
+          },
+          {
+            "type": "enum",
+            "name": "core::bool",
+            "variants": [
+              {
+                "name": "False",
+                "type": "()"
+              },
+              {
+                "name": "True",
+                "type": "()"
+              }
+            ]
+          },
+          {
+            "type": "struct",
+            "name": "simplebank::BankAccount",
+            "members": [
+              {
+                "name": "name",
+                "type": "core::felt252"
+              },
+              {
+                "name": "address",
+                "type": "core::starknet::contract_address::ContractAddress"
+              },
+              {
+                "name": "balance",
+                "type": "core::integer::u64"
+              },
+              {
+                "name": "opened",
+                "type": "core::bool"
+              }
+            ]
+          },
+          {
+            "type": "interface",
+            "name": "simplebank::interface::ISimpleBank",
+            "items": [
+              {
+                "type": "function",
+                "name": "open_account",
+                "inputs": [
+                  {
+                    "name": "name",
+                    "type": "core::felt252"
+                  }
+                ],
+                "outputs": [],
+                "state_mutability": "external"
+              },
+              {
+                "type": "function",
+                "name": "deposit",
+                "inputs": [
+                  {
+                    "name": "amount",
+                    "type": "core::integer::u64"
+                  }
+                ],
+                "outputs": [],
+                "state_mutability": "external"
+              },
+              {
+                "type": "function",
+                "name": "withdraw",
+                "inputs": [
+                  {
+                    "name": "amount",
+                    "type": "core::integer::u64"
+                  }
+                ],
+                "outputs": [],
+                "state_mutability": "external"
+              },
+              {
+                "type": "function",
+                "name": "transfer",
+                "inputs": [
+                  {
+                    "name": "amount",
+                    "type": "core::integer::u64"
+                  },
+                  {
+                    "name": "recipient",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                  }
+                ],
+                "outputs": [],
+                "state_mutability": "external"
+              },
+              {
+                "type": "function",
+                "name": "close_account",
+                "inputs": [
+                  {
+                    "name": "beneficiary",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                  }
+                ],
+                "outputs": [],
+                "state_mutability": "external"
+              },
+              {
+                "type": "function",
+                "name": "get_balance",
+                "inputs": [],
+                "outputs": [
+                  {
+                    "type": "core::integer::u64"
+                  }
+                ],
+                "state_mutability": "view"
+              },
+              {
+                "type": "function",
+                "name": "get_account_details",
+                "inputs": [],
+                "outputs": [
+                  {
+                    "type": "simplebank::BankAccount"
+                  }
+                ],
+                "state_mutability": "view"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::events::AccountCreated",
+            "kind": "struct",
+            "members": [
+              {
+                "name": "name",
+                "type": "core::felt252",
+                "kind": "data"
+              },
+              {
+                "name": "address",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              },
+              {
+                "name": "balance",
+                "type": "core::integer::u64",
+                "kind": "data"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::events::DepositMade",
+            "kind": "struct",
+            "members": [
+              {
+                "name": "amount",
+                "type": "core::integer::u64",
+                "kind": "data"
+              },
+              {
+                "name": "address",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::events::WithdrawalMade",
+            "kind": "struct",
+            "members": [
+              {
+                "name": "amount",
+                "type": "core::integer::u64",
+                "kind": "data"
+              },
+              {
+                "name": "address",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::events::TransferMade",
+            "kind": "struct",
+            "members": [
+              {
+                "name": "amount",
+                "type": "core::integer::u64",
+                "kind": "data"
+              },
+              {
+                "name": "from",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              },
+              {
+                "name": "to",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::events::AccountClosed",
+            "kind": "struct",
+            "members": [
+              {
+                "name": "closed",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              },
+              {
+                "name": "beneficiary",
+                "type": "core::starknet::contract_address::ContractAddress",
+                "kind": "data"
+              },
+              {
+                "name": "amount",
+                "type": "core::integer::u64",
+                "kind": "data"
+              }
+            ]
+          },
+          {
+            "type": "event",
+            "name": "simplebank::SimpleBank::Event",
+            "kind": "enum",
+            "variants": [
+              {
+                "name": "AccountCreated",
+                "type": "simplebank::events::AccountCreated",
+                "kind": "nested"
+              },
+              {
+                "name": "DepositMade",
+                "type": "simplebank::events::DepositMade",
+                "kind": "nested"
+              },
+              {
+                "name": "WithdrawalMade",
+                "type": "simplebank::events::WithdrawalMade",
+                "kind": "nested"
+              },
+              {
+                "name": "TransferMade",
+                "type": "simplebank::events::TransferMade",
+                "kind": "nested"
+              },
+              {
+                "name": "AccountClosed",
+                "type": "simplebank::events::AccountClosed",
+                "kind": "nested"
+              }
+            ]
+          }
+        ],
+        "Abi": {}
+      }
+    ],
+    "confirmEnoughContracts": true
+  }
+}

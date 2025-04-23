@@ -1,0 +1,39 @@
+specVersion: v0.1.0
+package:
+  name: simple_bank
+  version: v0.1.0
+
+imports:
+  starknet: https://spkg.io/streamingfast/starknet-foundational-v0.1.4.spkg
+
+protobuf:
+  files:
+    - events.proto
+  importPaths:
+    - ./proto
+
+  excludePaths:
+    - sf/substreams/index
+    - sf/substreams/rpc
+    - sf/substreams/sink
+    - sf/substreams/v1
+    - google
+
+binaries:
+  default:
+    type: wasm/rust-v1+wasm-bindgen-shims
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+
+modules:
+- name: map_simplebank_events
+  kind: map
+  initialBlock: 715839
+  inputs:
+    - map: starknet:filtered_transactions
+  output:
+   type: proto:starknet.v1.Events
+
+network: starknet-testnet
+
+params:
+  starknet:filtered_transactions: ev:from_address:0x05b2c60fe73ef869045ec173b20496c4f7d5f6c0c6ca52405e578b7cc144f6f6

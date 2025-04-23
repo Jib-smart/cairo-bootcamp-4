@@ -1,0 +1,32 @@
+type AccountCreated @entity(immutable: true) {
+    id: ID!
+    name: String!
+    address: String!
+    balance: BigInt!
+}
+
+type DepositMade @entity(immutable: true) {
+    id: ID!
+    amount: BigInt!
+    address: String!
+}
+
+type WithdrawalMade @entity(immutable: true) {
+    id: ID!
+    amount: BigInt!
+    address: String!
+}
+
+type TransferMade @entity(immutable: true) {
+    id: ID!
+    amount: BigInt!
+    from: String!
+    to: String!
+}
+
+type AccountClosed @entity(immutable: true) {
+    id: ID!
+    closed: String!
+    beneficiary: String!
+    amount: BigInt!
+}
