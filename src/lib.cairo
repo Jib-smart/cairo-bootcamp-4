@@ -1,6 +1,10 @@
 pub mod hello;
 pub mod IHello;
 pub mod INumber;
+pub mod counter;
+pub mod killswitch;
+pub mod aggregator;
+
 
 
 fn main() {
