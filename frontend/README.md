@@ -17,6 +17,7 @@ git checkout frontend
 ```
 
 ### 2. Install dependencies
+### 2. Install dependencies
 
 ```bash
 npm install --legacy-peer-deps
